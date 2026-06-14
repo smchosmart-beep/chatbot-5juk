@@ -14,13 +14,79 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      rule_chunks: {
+        Row: {
+          chunk_index: number
+          content: string
+          created_at: string
+          document_id: string
+          embedding: string
+          id: string
+        }
+        Insert: {
+          chunk_index: number
+          content: string
+          created_at?: string
+          document_id: string
+          embedding: string
+          id?: string
+        }
+        Update: {
+          chunk_index?: number
+          content?: string
+          created_at?: string
+          document_id?: string
+          embedding?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rule_chunks_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "rule_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rule_documents: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_size_label: string
+          id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_size_label: string
+          id?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_size_label?: string
+          id?: string
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_rule_chunks: {
+        Args: { match_count?: number; query_embedding: string }
+        Returns: {
+          content: string
+          document_id: string
+          id: string
+          similarity: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
