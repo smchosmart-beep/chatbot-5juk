@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "학급규칙 챗봇" },
+      { name: "description", content: "학급규칙 문서를 업로드 하고 채팅으로 질문하면 AI가 학급규칙을 알려줘요." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "학급규칙 챗봇" },
+      { property: "og:description", content: "학급규칙 문서를 업로드 하고 채팅으로 질문하면 AI가 학급규칙을 알려줘요." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "학급규칙 챗봇" },
+      { name: "twitter:description", content: "학급규칙 문서를 업로드 하고 채팅으로 질문하면 AI가 학급규칙을 알려줘요." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/59003f93-41e6-4251-9bb7-c4e1a32415ba/id-preview-d457db0e--ae0a0741-2750-4042-91c9-6ac95f0899e7.lovable.app-1781425806537.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/59003f93-41e6-4251-9bb7-c4e1a32415ba/id-preview-d457db0e--ae0a0741-2750-4042-91c9-6ac95f0899e7.lovable.app-1781425806537.png" },
     ],
     links: [
       {
