@@ -262,6 +262,8 @@ export const askQuestion = createServerFn({ method: "POST" })
       // 규칙을 못 찾았다는 답이면 출처 표시 안 함
       const isFallback = content === FALLBACK_ANSWER;
 
+      await logQuestion(data.question, !isFallback);
+
       return {
         content,
         citedRules: isFallback ? [] : citedRules,
