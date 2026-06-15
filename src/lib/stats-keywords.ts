@@ -25,8 +25,19 @@ const STOPWORDS = new Set([
   "내가", "나는", "우리", "저는", "제가", "너는",
 ]);
 
-// 끝에 붙은 조사를 한 번 제거
+// 단어 끝에 붙는 동사/형용사 활용형 어미 (어간만 남기기 위해 제거)
+const VERB_SUFFIXES = [
+  "하나요", "되나요", "하는걸까", "되는걸까", "하면", "하는", "해서", "하고", "해도", "하지",
+  "되는", "되면", "돼서", "했어", "할까", "될까",
+];
+
+// 끝에 붙은 조사 또는 활용 어미를 한 번 제거
 function stripParticle(token: string): string {
+  for (const s of VERB_SUFFIXES) {
+    if (token.length > s.length + 1 && token.endsWith(s)) {
+      return token.slice(0, token.length - s.length);
+    }
+  }
   for (const p of PARTICLES) {
     if (token.length > p.length + 1 && token.endsWith(p)) {
       return token.slice(0, token.length - p.length);
