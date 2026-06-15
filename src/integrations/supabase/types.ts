@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      question_logs: {
+        Row: {
+          answered: boolean
+          created_at: string
+          id: string
+          question: string
+        }
+        Insert: {
+          answered?: boolean
+          created_at?: string
+          id?: string
+          question: string
+        }
+        Update: {
+          answered?: boolean
+          created_at?: string
+          id?: string
+          question?: string
+        }
+        Relationships: []
+      }
       rule_chunks: {
         Row: {
           chunk_index: number
