@@ -2,15 +2,43 @@
 // 이 파일은 *.server.ts 이므로 클라이언트 번들에 포함되지 않습니다.
 // 핸들러 안에서 동적 import 로 불러 사용하세요.
 
-const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1";
-const EMBEDDING_MODEL = "google/gemini-embedding-001";
-const EMBEDDING_DIMENSIONS = 1536;
-const CHAT_MODEL = "google/gemini-3-flash-preview";
+interface ProviderConfig {
+  baseUrl: string;
+  apiKey: string;
+  embeddingModel: string;
+  chatModel: string;
+  dimensions: number;
+}
 
-function getApiKey(): string {
-  const key = process.env.LOVABLE_API_KEY;
-  if (!key) throw new Error("LOVABLE_API_KEY is not configured");
-  return key;
+function getProviderConfig(): ProviderConfig {
+  if (process.env.LOVABLE_API_KEY && !process.env.LOVABLE_API_KEY.includes("YOUR_LOVABLE_API_KEY")) {
+    return {
+      baseUrl: "https://ai.gateway.lovable.dev/v1",
+      apiKey: process.env.LOVABLE_API_KEY,
+      embeddingModel: "google/gemini-embedding-001",
+      chatModel: "google/gemini-3-flash-preview",
+      dimensions: 1536,
+    };
+  }
+  if (process.env.GEMINI_API_KEY) {
+    return {
+      baseUrl: "https://generativelanguage.googleapis.com/v1beta/openai",
+      apiKey: process.env.GEMINI_API_KEY,
+      embeddingModel: "text-embedding-004",
+      chatModel: "gemini-1.5-flash",
+      dimensions: 1536,
+    };
+  }
+  if (process.env.OPENAI_API_KEY) {
+    return {
+      baseUrl: "https://api.openai.com/v1",
+      apiKey: process.env.OPENAI_API_KEY,
+      embeddingModel: "text-embedding-3-small",
+      chatModel: "gpt-4o-mini",
+      dimensions: 1536,
+    };
+  }
+  throw new Error("No AI API Key found. Please configure LOVABLE_API_KEY, GEMINI_API_KEY, or OPENAI_API_KEY in your .env file.");
 }
 
 export class AiGatewayError extends Error {
@@ -25,16 +53,17 @@ export class AiGatewayError extends Error {
 /** 여러 텍스트를 한 번에 임베딩합니다 (1536차원). */
 export async function embedTexts(inputs: string[]): Promise<number[][]> {
   if (inputs.length === 0) return [];
-  const res = await fetch(`${GATEWAY_URL}/embeddings`, {
+  const config = getProviderConfig();
+  const res = await fetch(`${config.baseUrl}/embeddings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${config.apiKey}`,
     },
     body: JSON.stringify({
-      model: EMBEDDING_MODEL,
+      model: config.embeddingModel,
       input: inputs,
-      dimensions: EMBEDDING_DIMENSIONS,
+      dimensions: config.dimensions,
     }),
   });
 
@@ -63,14 +92,15 @@ export async function chatCompletionJson(
   systemPrompt: string,
   userPrompt: string,
 ): Promise<string> {
-  const res = await fetch(`${GATEWAY_URL}/chat/completions`, {
+  const config = getProviderConfig();
+  const res = await fetch(`${config.baseUrl}/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${config.apiKey}`,
     },
     body: JSON.stringify({
-      model: CHAT_MODEL,
+      model: config.chatModel,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
@@ -90,6 +120,7 @@ export async function chatCompletionJson(
   };
   return json.choices?.[0]?.message?.content ?? "{}";
 }
+
 
 /** 긴 텍스트를 임베딩하기 좋은 크기의 조각으로 나눕니다. */
 export function chunkText(text: string): string[] {
