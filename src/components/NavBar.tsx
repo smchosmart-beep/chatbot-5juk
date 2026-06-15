@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { MessageCircle, UploadCloud } from "lucide-react";
+import { BarChart3, MessageCircle, UploadCloud } from "lucide-react";
 
 const NAV_ITEMS: { to: string; label: string; icon: typeof MessageCircle }[] = [
   { to: "/", label: "채팅", icon: MessageCircle },
   { to: "/upload", label: "규칙 업로드", icon: UploadCloud },
+  { to: "/stats", label: "질문 통계", icon: BarChart3 },
 ];
 
 export function NavBar() {
