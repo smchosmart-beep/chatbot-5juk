@@ -311,7 +311,7 @@ function StatsPage() {
                           &quot;{question.text}&quot;
                         </p>
                         <span className="text-[10px] text-ink-400 whitespace-nowrap">
-                          {relativeTime(question.createdAt)}
+                          {isMounted ? relativeTime(question.createdAt) : ""}
                         </span>
                       </div>
                     ))}

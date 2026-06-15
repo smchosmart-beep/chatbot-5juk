@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { matchKeywords } from "@/lib/stats-keywords";
+import { extractKeywords } from "@/lib/stats-keywords";
 
 export interface KeywordStat {
   name: string;
@@ -42,7 +42,7 @@ export const getQuestionStats = createServerFn({ method: "GET" }).handler(
     // 1) 키워드 집계
     const counts = new Map<string, number>();
     for (const log of logs) {
-      for (const kw of matchKeywords(log.question)) {
+      for (const kw of extractKeywords(log.question)) {
         counts.set(kw, (counts.get(kw) ?? 0) + 1);
       }
     }
