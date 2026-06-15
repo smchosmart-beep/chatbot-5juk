@@ -221,6 +221,7 @@ export const askQuestion = createServerFn({ method: "POST" })
       );
 
       if (relevant.length === 0) {
+        await logQuestion(data.question, false);
         return { content: FALLBACK_ANSWER, citedRules: [] };
       }
 
